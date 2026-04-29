@@ -55,9 +55,12 @@ services:
     build: .
     container_name: zenith_bot
     restart: always
+    command: sh -c "npx prisma migrate deploy && npm start"
     depends_on:
-      - geth
-      - postgres
+      postgres:
+        condition: service_healthy
+      geth:
+        condition: service_started
     environment:
       - DISCORD_TOKEN=${DISCORD_TOKEN}
       - DISCORD_CLIENT_ID=${DISCORD_CLIENT_ID}
